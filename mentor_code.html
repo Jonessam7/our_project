@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor Portal</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dashboard-container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .code-btn {
+            background-color: #27ae60;
+            margin-top: 10px;
+        }
+        
+        .code-btn:hover {
+            background-color: #219653;
+        }
+        
+        .code-display {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            font-size: 24px;
+            letter-spacing: 5px;
+            font-weight: bold;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            margin-top: 5px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .welcome-message {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-card h3 {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card p {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        
+        .recent-activity, .upcoming-sessions, .code-generator {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .recent-activity h2, .upcoming-sessions h2, .code-generator h2 {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .activity-item, .session-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .activity-item:last-child, .session-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-time, .session-time {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+        
+        .logout-btn {
+            background-color: #e74c3c;
+            padding: 8px 15px;
+            font-size: 14px;
+            width: auto;
+        }
+        
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .link-btn {
+            background: none;
+            border: none;
+            color: #3498db;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: underline;
+            width: auto;
+            padding: 5px 0;
+            text-align: center;
+            display: block;
+            margin: 15px auto 0;
+        }
+        
+        .link-btn:hover {
+            color: #2980b9;
+            background: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        
+        .nav-links button {
+            width: auto;
+            margin: 0 5px;
+        }
+        
+        .dashboard-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .share-code-btn {
+            background-color: #9b59b6;
+        }
+        
+        .share-code-btn:hover {
+            background-color: #8e44ad;
+        }
+        
+        .generated-codes-list {
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .code-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            margin-bottom: 8px;
+        }
+        
+        .code-value {
+            font-family: monospace;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        
+        .code-time {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Container -->
+    <div class="container" id="loginContainer">
+        <div class="logo">
+            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="40" cy="40" r="40" fill="#3498db" />
+                <path d="M30 30C30 25.5817 33.5817 22 38 22H42C46.4183 22 50 25.5817 50 30V30C50 34.4183 46.4183 38 42 38H38C33.5817 38 30 34.4183 30 30V30Z" fill="white" />
+                <path d="M30 50C30 45.5817 33.5817 42 38 42H42C46.4183 42 50 45.5817 50 50V50C50 54.4183 46.4183 58 42 58H38C33.5817 58 30 54.4183 30 50V50Z" fill="white" />
+                <rect x="38" y="38" width="4" height="4" fill="white" />
+            </svg>
+        </div>
+        
+        <h1>Mentor Login</h1>
+        
+        <div class="form-group">
+            <label for="login-username">Username</label>
+            <input type="text" id="login-username" placeholder="Enter your username">
+            <div class="error-message" id="loginUsernameError">Please enter a valid username</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" placeholder="Enter your password">
+            <div class="error-message" id="loginPasswordError">Please enter your password</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="accessCode">Access Code</label>
+            <input type="text" id="accessCode" placeholder="Enter access code">
+            <div class="error-message" id="codeError">Invalid access code</div>
+            <div class="code-display" id="codeDisplay">XXXXXX</div>
+            <button class="code-btn" id="generateCodeBtn">Generate New Code</button>
+        </div>
+        
+        <button id="loginBtn">Login</button>
+        
+        <div class="nav-links">
+            <button class="link-btn" id="goToRegisterBtn">New mentor? Register here</button>
+        </div>
+    </div>
+    
+    <!-- Registration Container -->
+    <div class="container" id="registerContainer" style="display: none;">
+        <div class="logo">
+            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="40" cy="40" r="40" fill="#3498db" />
+                <path d="M30 30C30 25.5817 33.5817 22 38 22H42C46.4183 22 50 25.5817 50 30V30C50 34.4183 46.4183 38 42 38H38C33.5817 38 30 34.4183 30 30V30Z" fill="white" />
+                <path d="M30 50C30 45.5817 33.5817 42 38 42H42C46.4183 42 50 45.5817 50 50V50C50 54.4183 46.4183 58 42 58H38C33.5817 58 30 54.4183 30 50V50Z" fill="white" />
+                <rect x="38" y="38" width="4" height="4" fill="white" />
+            </svg>
+        </div>
+        
+        <h1>Mentor Registration</h1>
+        
+        <div class="form-group">
+            <label for="register-fullname">Full Name</label>
+            <input type="text" id="register-fullname" placeholder="Enter your full name">
+            <div class="error-message" id="fullnameError">Please enter your full name</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="register-email">Email</label>
+            <input type="email" id="register-email" placeholder="Enter your email">
+            <div class="error-message" id="emailError">Please enter a valid email</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="register-username">Username</label>
+            <input type="text" id="register-username" placeholder="Choose a username">
+            <div class="error-message" id="registerUsernameError">Please choose a valid username</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="register-password">Password</label>
+            <input type="password" id="register-password" placeholder="Create a password">
+            <div class="error-message" id="registerPasswordError">Password must be at least 6 characters</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="register-confirm">Confirm Password</label>
+            <input type="password" id="register-confirm" placeholder="Confirm your password">
+            <div class="error-message" id="confirmError">Passwords do not match</div>
+        </div>
+        
+        <button id="registerBtn">Register</button>
+        
+        <div class="nav-links">
+            <button class="link-btn" id="goToLoginBtn">Already registered? Login here</button>
+        </div>
+    </div>
+    
+    <!-- Dashboard Container -->
+    <div class="dashboard-container" id="dashboardContainer">
+        <div class="dashboard-header">
+            <div class="welcome-message">Welcome, <span id="mentorName">Mentor</span></div>
+            <button class="logout-btn" id="logoutBtn">Logout</button>
+        </div>
+        
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <h3>Total Students</h3>
+                <p>24</p>
+            </div>
+            <div class="stat-card">
+                <h3>Active Sessions</h3>
+                <p>8</p>
+            </div>
+            <div class="stat-card">
+                <h3>Completed Sessions</h3>
+                <p>156</p>
+            </div>
+            <div class="stat-card">
+                <h3>Satisfaction Rate</h3>
+                <p>94%</p>
+            </div>
+        </div>
+        
+        <div class="code-generator">
+            <h2>Access Code Generator</h2>
+            <div class="code-display" id="dashboardCodeDisplay">XXXXXX</div>
+            <div class="dashboard-actions">
+                <button class="code-btn" id="dashboardGenerateCodeBtn">Generate New Code</button>
+                <button class="share-code-btn" id="shareCodeBtn">Copy to Clipboard</button>
+            </div>
+            <div class="generated-codes-list" id="generatedCodesList">
+                <!-- Generated codes will appear here -->
+            </div>
+        </div>
+        
+        <div class="dashboard-content">
+            <div class="recent-activity">
+                <h2>Recent Activity</h2>
+                <div class="activity-item">
+                    <div class="activity-time">Today, 9:45 AM</div>
+                    <div class="activity-desc">Conducted session with John Doe on Advanced Python</div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-time">Yesterday, 2:30 PM</div>
+                    <div class="activity-desc">Reviewed assignment for Data Structures class</div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-time">Yesterday, 11:15 AM</div>
+                    <div class="activity-desc">Scheduled a group session for Web Development</div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-time">Mar 5, 3:00 PM</div>
+                    <div class="activity-desc">Conducted code review for Sarah Williams</div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-time">Mar 5, 10:20 AM</div>
+                    <div class="activity-desc">Updated curriculum for Machine Learning course</div>
+                </div>
+            </div>
+            
+            <div class="upcoming-sessions">
+                <h2>Upcoming Sessions</h2>
+                <div class="session-item">
+                    <div class="session-time">Today, 2:00 PM</div>
+                    <div class="session-desc">React Fundamentals with Alex Johnson</div>
+                </div>
+                <div class="session-item">
+                    <div class="session-time">Today, 4:30 PM</div>
+                    <div class="session-desc">Database Design with Rachel Garcia</div>
+                </div>
+                <div class="session-item">
+                    <div class="session-time">Tomorrow, 10:00 AM</div>
+                    <div class="session-desc">Cloud Computing Basics with Team Alpha</div>
+                </div>
+                <div class="session-item">
+                    <div class="session-time">Tomorrow, 3:15 PM</div>
+                    <div class="session-desc">Code Review with Michael Chen</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const loginContainer = document.getElementById('loginContainer');
+        const registerContainer = document.getElementById('registerContainer');
+        const dashboardContainer = document.getElementById('dashboardContainer');
+        
+        // Login elements
+        const loginUsernameInput = document.getElementById('login-username');
+        const loginPasswordInput = document.getElementById('login-password');
+        const accessCodeInput = document.getElementById('accessCode');
+        const codeDisplay = document.getElementById('codeDisplay');
+        const generateCodeBtn = document.getElementById('generateCodeBtn');
+        const loginBtn = document.getElementById('loginBtn');
+        
+        // Registration elements
+        const registerFullnameInput = document.getElementById('register-fullname');
+        const registerEmailInput = document.getElementById('register-email');
+        const registerUsernameInput = document.getElementById('register-username');
+        const registerPasswordInput = document.getElementById('register-password');
+        const registerConfirmInput = document.getElementById('register-confirm');
+        const registerBtn = document.getElementById('registerBtn');
+        
+        // Dashboard elements
+        const logoutBtn = document.getElementById('logoutBtn');
+        const mentorNameElement = document.getElementById('mentorName');
+        const dashboardCodeDisplay = document.getElementById('dashboardCodeDisplay');
+        const dashboardGenerateCodeBtn = document.getElementById('dashboardGenerateCodeBtn');
+        const shareCodeBtn = document.getElementById('shareCodeBtn');
+        const generatedCodesList = document.getElementById('generatedCodesList');
+        
+        // Navigation
+        const goToRegisterBtn = document.getElementById('goToRegisterBtn');
+        const goToLoginBtn = document.getElementById('goToLoginBtn');
+        
+        // Error message elements
+        const loginUsernameError = document.getElementById('loginUsernameError');
+        const loginPasswordError = document.getElementById('loginPasswordError');
+        const codeError = document.getElementById('codeError');
+        const fullnameError = document.getElementById('fullnameError');
+        const emailError = document.getElementById('emailError');
+        const registerUsernameError = document.getElementById('registerUsernameError');
+        const registerPasswordError = document.getElementById('registerPasswordError');
+        const confirmError = document.getElementById('confirmError');
+        
+        // Store the current code and user data
+        let currentCode = '';
+        let dashboardCode = '';
+        let users = [];
+        let generatedCodes = [];
+        
+        // Function to generate random alphabetic code
+        function generateRandomCode(length = 6) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return result;
+        }
+        
+        // Generate initial codes
+        function generateNewCode() {
+            currentCode = generateRandomCode();
+            codeDisplay.textContent = currentCode;
+        }
+        
+        function generateDashboardCode() {
+            dashboardCode = generateRandomCode();
+            dashboardCodeDisplay.textContent = dashboardCode;
+            
+            // Add to generated codes list with timestamp
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            const dateString = now.toLocaleDateString();
+            
+            generatedCodes.unshift({
+                code: dashboardCode,
+                timestamp: `${dateString} ${timeString}`
+            });
+            
+            // Update the list display
+            updateGeneratedCodesList();
+        }
+        
+        function updateGeneratedCodesList() {
+            generatedCodesList.innerHTML = '';
+            
+            generatedCodes.forEach(codeItem => {
+                const codeElement = document.createElement('div');
+                codeElement.className = 'code-item';
+                codeElement.innerHTML = `
+                    <span class="code-value">${codeItem.code}</span>
+                    <span class="code-time">${codeItem.timestamp}</span>
+                `;
+                generatedCodesList.appendChild(codeElement);
+            });
+        }
+        
+        // Generate codes when the page loads
+        generateNewCode();
+        generateDashboardCode();
+        
+        // Navigation between login and register
+        goToRegisterBtn.addEventListener('click', function() {
+            loginContainer.style.display = 'none';
+            registerContainer.style.display = 'block';
+        });
+        
+        goToLoginBtn.addEventListener('click', function() {
+            registerContainer.style.display = 'none';
+            loginContainer.style.display = 'block';
+        });
+        
+        // Generate a new code when button is clicked
+        generateCodeBtn.addEventListener('click', generateNewCode);
+        dashboardGenerateCodeBtn.addEventListener('click', generateDashboardCode);
+        
+        // Share code functionality
+        shareCodeBtn.addEventListener('click', function() {
+            navigator.clipboard.writeText(dashboardCode)
+                .then(() => {
+                    alert('Code copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Could not copy text: ', err);
+                });
+        });
+        
+        // Validate the login form
+        function validateLoginForm() {
+            let isValid = true;
+            
+            // Reset error messages
+            loginUsernameError.style.display = 'none';
+            loginPasswordError.style.display = 'none';
+            codeError.style.display = 'none';
+            
+            // Validate username
+            if (!loginUsernameInput.value.trim()) {
+                loginUsernameError.style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate password
+            if (!loginPasswordInput.value.trim()) {
+                loginPasswordError.style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate access code
+            if (accessCodeInput.value.trim() !== currentCode) {
+                codeError.style.display = 'block';
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+        
+        // Validate the registration form
+        function validateRegisterForm() {
+            let isValid = true;
+            
+            // Reset error messages
+            fullnameError.style.display = 'none';
+            emailError.style.display = 'none';
+            registerUsernameError.style.display = 'none';
+            registerPasswordError.style.display = 'none';
+            confirmError.style.display = 'none';
+            
+            // Validate full name
+            if (!registerFullnameInput.value.trim()) {
+                fullnameError.style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate email
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(registerEmailInput.value.trim())) {
+                emailError.style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate username
+            if (registerUsernameInput.value.trim().length < 3) {
+                registerUsernameError.style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate password
+            if (registerPasswordInput.value.length < 6) {
+                registerPasswordError.style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate password confirmation
+            if (registerPasswordInput.value !== registerConfirmInput.value) {
+                confirmError.style.display = 'block';
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+        
+        // Handle login
+        loginBtn.addEventListener('click', function() {
+            if (validateLoginForm()) {
+                // Check if user exists in our "database"
+                const user = users.find(u => 
+                    u.username === loginUsernameInput.value.trim() && 
+                    u.password === loginPasswordInput.value
+                );
+                
+                if (user || users.length === 0) { // Allow login if no users yet registered (for demo)
+                    // Set the mentor name in the dashboard
+                    mentorNameElement.textContent = user ? user.fullname : loginUsernameInput.value;
+                    
+                    // Hide login and show dashboard
+                    loginContainer.style.display = 'none';
+                    dashboardContainer.style.display = 'block';
+                    
+                    // Clear login form
+                    loginUsernameInput.value = '';
+                    loginPasswordInput.value = '';
+                    accessCodeInput.value = '';
+                    
+                    // Generate a new login code
+                    generateNewCode();
+                } else {
+                    alert('Invalid username or password');
+                }
+            }
+        });
+        
+        // Handle registration
+        registerBtn.addEventListener('click', function() {
+            if (validateRegisterForm()) {
+                // Create new user
+                const newUser = {
+                    fullname: registerFullnameInput.value.trim(),
+                    email: registerEmailInput.value.trim(),
+                    username: registerUsernameInput.value.trim(),
+                    password: registerPasswordInput.value
+                };
+                
+                // Add to users array
+                users.push(newUser);
+                
+                // Alert success
+                alert('Registration successful! You can now login.');
+                
+                // Clear register form
+                registerFullnameInput.value = '';
+                registerEmailInput.value = '';
+                registerUsernameInput.value = '';
+                registerPasswordInput.value = '';
+                registerConfirmInput.value = '';
+                
+                // Switch to login
+                registerContainer.style.display = 'none';
+                loginContainer.style.display = 'block';
+            }
+        });
+        
+        // Handle logout
+        logoutBtn.addEventListener('click', function() {
+            // Show login and hide dashboard
+            loginContainer.style.display = 'block';
+            dashboardContainer.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
