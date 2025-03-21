@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Dashboard</title>
+    <!-- Updated to use the proper CDN for Lucide icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+}
+
+.container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.auth-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+.auth-form h2 {
+    font-size: 1.875rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #1f2937;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.input-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.5rem 1rem 0.5rem 2.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Password toggle button styles */
+.toggle-password {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.password-toggle-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: #9ca3af;
+    transition: color 0.2s;
+}
+
+.toggle-password:hover .password-toggle-icon {
+    color: #6b7280;
+}
+
+/* Adjust input padding for password fields to accommodate the toggle button */
+.input-group input[type="password"] {
+    padding-right: 2.5rem;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 0.5rem;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.submit-btn:hover {
+    background: #2563eb;
+}
+
+.text-center {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.link {
+    color: #3b82f6;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
+
+.error-message {
+    color: #ef4444;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+    min-height: 1.25rem;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Dashboard Styles */
+.dashboard {
+    min-height: 100vh;
+    background: #f3f4f6;
+}
+
+.dashboard-header {
+    background: white;
+    padding: 1.5rem 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-content h1 {
+    font-size: 1.875rem;
+    font-weight: bold;
+    color: #1f2937;
+}
+
+.user-email {
+    color: #6b7280;
+}
+
+.dashboard-content {
+    max-width: 1280px;
+    margin: 1.5rem auto;
+    padding: 0 1rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.stat-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.stat-icon {
+    width: 2rem;
+    height: 2rem;
+    margin-right: 0.75rem;
+}
+
+.yellow {
+    color: #f59e0b;
+}
+
+.blue {
+    color: #3b82f6;
+}
+
+.purple {
+    color: #8b5cf6;
+}
+
+.green {
+    color: #10b981;
+}
+
+.stat-value {
+    font-size: 1.875rem;
+    font-weight: bold;
+    color: #1f2937;
+}
+
+.ranking-list {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.ranking-list h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1f2937;
+    margin-bottom: 1rem;
+}
+
+.ranking-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #f9fafb;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.ranking-info {
+    display: flex;
+    align-items: center;
+}
+
+.rank {
+    font-weight: 600;
+    margin-right: 1rem;
+}
+
+.points {
+    color: #3b82f6;
+    font-weight: 500;
+}
+
+.logout-btn {
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.logout-btn:hover {
+    background: #dc2626;
+}
+
+.rankings-container {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.no-data-message {
+    text-align: center;
+    color: #6b7280;
+    padding: 2rem 0;
+}
+
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Add event controls */
+.event-controls {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+}
+
+.event-controls h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1f2937;
+    margin-bottom: 1rem;
+}
+
+.event-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.event-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.participate-btn {
+    background: #3b82f6;
+    color: white;
+}
+
+.participate-btn:hover {
+    background: #2563eb;
+}
+
+.organize-btn {
+    background: #8b5cf6;
+    color: white;
+}
+
+.organize-btn:hover {
+    background: #7c3aed;
+}
+
+.volunteer-btn {
+    background: #10b981;
+    color: white;
+}
+
+.volunteer-btn:hover {
+    background: #059669;
+}
+
+/* Modal styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal {
+    background: white;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1f2937;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #6b7280;
+}
+
+.modal-content {
+    margin-bottom: 1.5rem;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.modal-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.cancel-btn {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.cancel-btn:hover {
+    background: #d1d5db;
+}
+
+.confirm-btn {
+    background: #3b82f6;
+    color: white;
+}
+
+.confirm-btn:hover {
+    background: #2563eb;
+}
+
+/* Event history styles */
+.event-history {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-top: 1.5rem;
+}
+
+.event-history h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1f2937;
+    margin-bottom: 1rem;
+}
+
+.event-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.event-item {
+    padding: 0.75rem;
+    background: #f9fafb;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.event-code {
+    font-family: monospace;
+    font-weight: bold;
+    padding: 0.25rem 0.5rem;
+    background: #e5e7eb;
+    border-radius: 0.25rem;
+}
+
+.event-type {
+    font-weight: 500;
+}
+
+.event-type.participated {
+    color: #3b82f6;
+}
+
+.event-type.organized {
+    color: #8b5cf6;
+}
+
+.event-type.volunteered {
+    color: #10b981;
+}
+
+.event-date {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+/* New styles for event code management */
+.event-code-generator {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+}
+
+.event-code-generator h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1f2937;
+    margin-bottom: 1rem;
+}
+
+.generate-btn {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.generate-btn:hover {
+    background: #2563eb;
+}
+
+.event-codes-list {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 1rem;
+}
+
+.event-code-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background: #f9fafb;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.event-code-value {
+    font-family: monospace;
+    font-weight: bold;
+}
+
+.event-code-copy {
+    background: none;
+    border: none;
+    color: #3b82f6;
+    cursor: pointer;
+}
+
+.event-code-copy:hover {
+    text-decoration: underline;
+}
+</style>
+<body>
+    <div id="auth-container" class="container">
+        <div class="auth-form">
+            <h2 id="form-title">Welcome Back</h2>
+            <form id="auth-form">
+                <div class="input-group">
+                    <i data-lucide="user" class="input-icon"></i>
+                    <input type="text" id="username" placeholder="Username" required>
+                </div>
+                <div id="fullname-group" class="input-group hidden">
+                    <i data-lucide="user" class="input-icon"></i>
+                    <input type="text" id="fullname" placeholder="Full Name">
+                </div>
+                <div id="email-group" class="input-group hidden">
+                    <i data-lucide="mail" class="input-icon"></i>
+                    <input type="email" id="email" placeholder="Email">
+                </div>
+                <div class="input-group">
+                    <i data-lucide="key-round" class="input-icon"></i>
+                    <input type="password" id="password" placeholder="Password" required>
+                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password')">
+                        <i data-lucide="eye" class="password-toggle-icon"></i>
+                    </button>
+                </div>
+                <div id="confirm-password-group" class="input-group hidden">
+                    <i data-lucide="key-round" class="input-icon"></i>
+                    <input type="password" id="confirm-password" placeholder="Confirm Password">
+                    <button type="button" class="toggle-password"
+                        onclick="togglePasswordVisibility('confirm-password')">
+                        <i data-lucide="eye" class="password-toggle-icon"></i>
+                    </button>
+                </div>
+                <p id="error-message" class="error-message"></p>
+                <button type="submit" class="submit-btn">Login</button>
+            </form>
+            <p id="forgot-password" class="text-center">
+                <a href="#" class="link">Forgot Password?</a>
+            </p>
+            <p class="text-center">
+                <span id="toggle-text">Don't have an account? </span>
+                <a href="#" id="toggle-auth" class="link">Register</a>
+            </p>
+        </div>
+    </div>
+    <div id="dashboard" class="dashboard hidden">
+        <div class="dashboard-header">
+            <div class="header-content">
+                <div>
+                    <h1 id="welcome-message">Welcome</h1>
+                    <p id="unique-code"></p>
+                </div>
+                <div class="user-actions">
+                    <span class="user-email" id="user-email"></span>
+                    <button id="logout-btn" class="logout-btn">Logout</button>
+                </div>
+            </div>
+        </div>
+        <div class="dashboard-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <i data-lucide="trophy" class="stat-icon yellow"></i>
+                        <h2>Ranking</h2>
+                    </div>
+                    <p id="ranking" class="stat-value">#0</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <i data-lucide="calendar" class="stat-icon blue"></i>
+                        <h2>Events Participated</h2>
+                    </div>
+                    <p id="events-participated" class="stat-value">0</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <i data-lucide="crown" class="stat-icon purple"></i>
+                        <h2>Events Organized</h2>
+                    </div>
+                    <p id="events-organized" class="stat-value">0</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <i data-lucide="heart-handshake" class="stat-icon green"></i>
+                        <h2>Events Volunteered</h2>
+                    </div>
+                    <p id="events-volunteered" class="stat-value">0</p>
+                </div>
+            </div>
+            <!-- Event Code Generator Section -->
+            <div class="event-code-generator">
+                <h2>Event Code Generator</h2>
+                <button id="generate-event-code-btn" class="generate-btn">
+                    <i data-lucide="plus-circle" class="event-icon"></i>
+                    Generate New Event Code
+                </button>
+                <div class="event-codes-list" id="event-codes-list">
+                    <!-- Event codes will be dynamically filled here -->
+                </div>
+            </div>
+            <div class="event-controls">
+                <h2>Event Actions</h2>
+                <div class="event-buttons">
+                    <button class="event-btn participate-btn" id="participate-btn">
+                        <i data-lucide="plus-circle" class="event-icon"></i>
+                        Participate in Event
+                    </button>
+                    <button class="event-btn organize-btn" id="organize-btn">
+                        <i data-lucide="plus-circle" class="event-icon"></i>
+                        Organize Event
+                    </button>
+                    <button class="event-btn volunteer-btn" id="volunteer-btn">
+                        <i data-lucide="plus-circle" class="event-icon"></i>
+                        Volunteer for Event
+                    </button>
+                </div>
+            </div>
+            <div class="ranking-list">
+                <h2>Ranking List</h2>
+                <div id="rankings-container" class="rankings-container">
+                    <!-- Rankings will be dynamically filled here -->
+                </div>
+            </div>
+            <div class="event-history">
+                <h2>Event History</h2>
+                <div id="event-list" class="event-list">
+                    <!-- Event history will be dynamically filled here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Event Modal -->
+    <div id="event-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modal-title" class="modal-title">Add Event</h2>
+                <button class="close-modal" id="close-modal-btn">&times;</button>
+            </div>
+            <div class="modal-content">
+                <div class="input-group">
+                    <i data-lucide="hash" class="input-icon"></i>
+                    <input type="text" id="event-code" placeholder="Enter Event Code" required>
+                </div>
+                <p id="modal-error" class="error-message"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn cancel-btn" id="cancel-modal-btn">Cancel</button>
+                <button id="confirm-event-btn" class="modal-btn confirm-btn">Confirm</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Get DOM elements
+        const usernameInput = document.getElementById('username');
+        const fullnameInput = document.getElementById('fullname');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirm-password');
+        const authForm = document.getElementById('auth-form');
+        const authContainer = document.getElementById('auth-container');
+        const dashboard = document.getElementById('dashboard');
+        const errorMessage = document.getElementById('error-message');
+        const formTitle = document.getElementById('form-title');
+        const toggleAuth = document.getElementById('toggle-auth');
+        const toggleText = document.getElementById('toggle-text');
+        const fullnameGroup = document.getElementById('fullname-group');
+        const emailGroup = document.getElementById('email-group');
+        const confirmPasswordGroup = document.getElementById('confirm-password-group');
+        const forgotPassword = document.getElementById('forgot-password');
+
+        // Dashboard elements
+        const welcomeMessage = document.getElementById('welcome-message');
+        const uniqueCode = document.getElementById('unique-code');
+        const userEmail = document.getElementById('user-email');
+        const rankingElement = document.getElementById('ranking');
+        const eventsParticipated = document.getElementById('events-participated');
+        const eventsOrganized = document.getElementById('events-organized');
+        const eventsVolunteered = document.getElementById('events-volunteered');
+        const rankingsContainer = document.getElementById('rankings-container');
+        const eventList = document.getElementById('event-list');
+        const generateEventCodeBtn = document.getElementById('generate-event-code-btn');
+        const eventCodesList = document.getElementById('event-codes-list');
+
+        // Event buttons
+        const participateBtn = document.getElementById('participate-btn');
+        const organizeBtn = document.getElementById('organize-btn');
+        const volunteerBtn = document.getElementById('volunteer-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+
+        // Modal elements
+        const eventModal = document.getElementById('event-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const eventCodeInput = document.getElementById('event-code');
+        const modalError = document.getElementById('modal-error');
+        const confirmEventBtn = document.getElementById('confirm-event-btn');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const cancelModalBtn = document.getElementById('cancel-modal-btn');
+
+        // Define storage keys
+        const USERS_STORAGE_KEY = 'dashboard_users';
+        const CURRENT_USER_KEY = 'dashboard_current_user';
+        const EVENTS_STORAGE_KEY = 'dashboard_events';
+        const EVENT_CODES_STORAGE_KEY = 'dashboard_event_codes';
+
+        // Add these variables
+        let isLogin = true;
+        let currentUser = null;
+        let currentEventAction = null;
+
+        // Local Storage Functions
+        function getUsers() {
+            const users = localStorage.getItem(USERS_STORAGE_KEY);
+            return users ? JSON.parse(users) : [];
+        }
+
+        function saveUsers(users) {
+            localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+        }
+
+        function findUserByUsername(username) {
+            const users = getUsers();
+            return users.find(user => user.username === username);
+        }
+
+        function saveUser(user) {
+            const users = getUsers();
+            const existingUserIndex = users.findIndex(u => u.username === user.username);
+            if (existingUserIndex >= 0) {
+                users[existingUserIndex] = user;
+            } else {
+                users.push(user);
+            }
+            saveUsers(users);
+        }
+
+        function setCurrentUser(user) {
+            localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+            currentUser = user;
+        }
+
+        function getCurrentUser() {
+            const user = localStorage.getItem(CURRENT_USER_KEY);
+            return user ? JSON.parse(user) : null;
+        }
+
+        function clearCurrentUser() {
+            localStorage.removeItem(CURRENT_USER_KEY);
+            currentUser = null;
+        }
+
+        function getEvents() {
+            const events = localStorage.getItem(EVENTS_STORAGE_KEY);
+            return events ? JSON.parse(events) : [];
+        }
+
+        function saveEvent(event) {
+            const events = getEvents();
+            events.push(event);
+            localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(events));
+        }
+
+        function getUserEvents(username) {
+            const events = getEvents();
+            return events.filter(event => event.username === username);
+        }
+
+        // Event code management
+        function getEventCodes() {
+            const codes = localStorage.getItem(EVENT_CODES_STORAGE_KEY);
+            return codes ? JSON.parse(codes) : [];
+        }
+
+        function saveEventCodes(codes) {
+            localStorage.setItem(EVENT_CODES_STORAGE_KEY, JSON.stringify(codes));
+        }
+
+        function addEventCode(code) {
+            const codes = getEventCodes();
+            codes.push({
+                code: code,
+                createdBy: currentUser.username,
+                createdAt: new Date().toISOString(),
+                used: false
+            });
+            saveEventCodes(codes);
+            return codes;
+        }
+
+        function markEventCodeAsUsed(code) {
+            const codes = getEventCodes();
+            const codeIndex = codes.findIndex(c => c.code === code);
+            if (codeIndex >= 0) {
+                codes[codeIndex].used = true;
+                codes[codeIndex].usedBy = currentUser.username;
+                codes[codeIndex].usedAt = new Date().toISOString();
+                saveEventCodes(codes);
+            }
+            return codes;
+        }
+
+        // Utility Functions
+        function validatePassword(password) {
+            const hasMinLength = password.length >= 8;
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+            const hasNumberAndLetter = /^(?=.*[0-9])(?=.*[a-zA-Z])/.test(password);
+            return hasMinLength && hasUpperCase && hasSpecialChar && hasNumberAndLetter;
+        }
+
+        function generateUniqueCode(fullName) {
+            const nameLetters = fullName.substring(0, 2).toUpperCase();
+            const randomLetters = Array.from({ length: 2 }, () =>
+                String.fromCharCode(65 + Math.floor(Math.random() * 26))
+            ).join('');
+            const randomNumbers = Array.from({ length: 4 }, () =>
+                Math.floor(Math.random() * 10)
+            ).join('');
+            return `${nameLetters}${randomLetters}${randomNumbers}`;
+        }
+
+        function generateEventCode() {
+            const letters = Array.from({ length: 2 }, () =>
+                String.fromCharCode(65 + Math.floor(Math.random() * 26))
+            ).join('');
+            const numbers = Array.from({ length: 4 }, () =>
+                Math.floor(Math.random() * 10)
+            ).join('');
+            return `EV-${letters}${numbers}`;
+        }
+
+        function validateEventCode(code) {
+            // Check if code follows pattern EV-XX0000 (EV- followed by 2 letters and 4 numbers)
+            return /^EV-[A-Z]{2}[0-9]{4}$/.test(code);
+        }
+
+        function eventCodeExists(code) {
+            const codes = getEventCodes();
+            return codes.some(c => c.code === code);
+        }
+
+        // Toggle between login and register
+        function toggleAuthForm() {
+            isLogin = !isLogin;
+            if (isLogin) {
+                // Switch to Login
+                formTitle.textContent = 'Welcome Back';
+                fullnameGroup.classList.add('hidden');
+                emailGroup.classList.add('hidden');
+                confirmPasswordGroup.classList.add('hidden');
+                forgotPassword.classList.remove('hidden');
+                toggleText.textContent = "Don't have an account? ";
+                toggleAuth.textContent = 'Register';
+                authForm.querySelector('.submit-btn').textContent = 'Login';
+            } else {
+                // Switch to Register
+                formTitle.textContent = 'Create Account';
+                fullnameGroup.classList.remove('hidden');
+                emailGroup.classList.remove('hidden');
+                confirmPasswordGroup.classList.remove('hidden');
+                forgotPassword.classList.add('hidden');
+                toggleText.textContent = 'Already have an account? ';
+                toggleAuth.textContent = 'Login';
+                authForm.querySelector('.submit-btn').textContent = 'Register';
+            }
+            // Clear any error messages and form fields
+            errorMessage.textContent = '';
+            authForm.reset();
+        }
+
+        // Passwor// Toggle password visibility
+function togglePasswordVisibility(inputId) {
+    const passwordInput = document.getElementById(inputId);
+    const eyeIcon = passwordInput.nextElementSibling.querySelector('i');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeIcon.setAttribute('data-lucide', 'eye-off');
+    } else {
+        passwordInput.type = 'password';
+        eyeIcon.setAttribute('data-lucide', 'eye');
+    }
+    lucide.createIcons();
+}
+
+// Authentication
+function handleAuthFormSubmit(event) {
+    event.preventDefault();
+    
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value;
+    
+    if (!username || !password) {
+        displayError('All fields are required.');
+        return;
+    }
+    
+    if (isLogin) {
+        // Login logic
+        const user = findUserByUsername(username);
+        if (!user) {
+            displayError('Username not found.');
+            return;
+        }
+        
+        if (user.password !== password) {
+            displayError('Incorrect password.');
+            return;
+        }
+        
+        // Login successful
+        loginUser(user);
+    } else {
+        // Registration logic
+        const fullname = fullnameInput.value.trim();
+        const email = emailInput.value.trim();
+        const confirmPassword = confirmPasswordInput.value;
+        
+        if (!fullname || !email) {
+            displayError('All fields are required.');
+            return;
+        }
+        
+        if (password !== confirmPassword) {
+            displayError('Passwords do not match.');
+            return;
+        }
+        
+        if (!validatePassword(password)) {
+            displayError('Password must be at least 8 characters with uppercase, numbers, and special characters.');
+            return;
+        }
+        
+        if (findUserByUsername(username)) {
+            displayError('Username already exists.');
+            return;
+        }
+        
+        // Generate unique code for new user
+        const uniqueCode = generateUniqueCode(fullname);
+        
+        // Create new user
+        const newUser = {
+            username,
+            fullname,
+            email,
+            password,
+            uniqueCode,
+            eventsParticipated: 0,
+            eventsOrganized: 0,
+            eventsVolunteered: 0,
+            createdAt: new Date().toISOString()
+        };
+        
+        // Save user and log them in
+        saveUser(newUser);
+        loginUser(newUser);
+    }
+}
+
+function displayError(message) {
+    errorMessage.textContent = message;
+}
+
+function loginUser(user) {
+    setCurrentUser(user);
+    showDashboard();
+}
+
+// Dashboard functions
+function showDashboard() {
+    authContainer.classList.add('hidden');
+    dashboard.classList.remove('hidden');
+    updateDashboard();
+}
+
+function updateDashboard() {
+    if (!currentUser) return;
+    
+    // Update welcome message and user info
+    welcomeMessage.textContent = `Welcome, ${currentUser.fullname}`;
+    uniqueCode.textContent = `Unique Code: ${currentUser.uniqueCode}`;
+    userEmail.textContent = currentUser.email;
+    
+    // Update stats
+    eventsParticipated.textContent = currentUser.eventsParticipated || 0;
+    eventsOrganized.textContent = currentUser.eventsOrganized || 0;
+    eventsVolunteered.textContent = currentUser.eventsVolunteered || 0;
+    
+    // Calculate ranking
+    updateRankings();
+    
+    // Update event history
+    updateEventHistory();
+    
+    // Update event codes list
+    updateEventCodesList();
+}
+
+function updateRankings() {
+    // Get all users and sort by total events
+    const users = getUsers();
+    users.sort((a, b) => {
+        const totalA = (a.eventsParticipated || 0) + (a.eventsOrganized || 0) * 2 + (a.eventsVolunteered || 0) * 1.5;
+        const totalB = (b.eventsParticipated || 0) + (b.eventsOrganized || 0) * 2 + (b.eventsVolunteered || 0) * 1.5;
+        return totalB - totalA;
+    });
+    
+    // Find current user's rank
+    const userRank = users.findIndex(user => user.username === currentUser.username) + 1;
+    rankingElement.textContent = `#${userRank}`;
+    
+    // Generate rankings list
+    rankingsContainer.innerHTML = '';
+    
+    if (users.length === 0) {
+        rankingsContainer.innerHTML = '<p class="no-data-message">No rankings available yet.</p>';
+        return;
+    }
+    
+    users.forEach((user, index) => {
+        const points = (user.eventsParticipated || 0) + (user.eventsOrganized || 0) * 2 + (user.eventsVolunteered || 0) * 1.5;
+        const rankingItem = document.createElement('div');
+        rankingItem.className = 'ranking-item';
+        rankingItem.innerHTML = `
+            <div class="ranking-info">
+                <span class="rank">#${index + 1}</span>
+                <span>${user.fullname}</span>
+            </div>
+            <span class="points">${points.toFixed(1)} pts</span>
+        `;
+        rankingsContainer.appendChild(rankingItem);
+    });
+}
+
+function updateEventHistory() {
+    const events = getUserEvents(currentUser.username);
+    eventList.innerHTML = '';
+    
+    if (events.length === 0) {
+        eventList.innerHTML = '<p class="no-data-message">No event history yet.</p>';
+        return;
+    }
+    
+    // Sort events by date, newest first
+    events.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    events.forEach(event => {
+        const eventItem = document.createElement('div');
+        eventItem.className = 'event-item';
+        
+        let typeClass = '';
+        if (event.type === 'participated') typeClass = 'participated';
+        if (event.type === 'organized') typeClass = 'organized';
+        if (event.type === 'volunteered') typeClass = 'volunteered';
+        
+        eventItem.innerHTML = `
+            <div>
+                <span class="event-code">${event.code}</span>
+                <span class="event-type ${typeClass}">${capitalizeFirstLetter(event.type)}</span>
+            </div>
+            <span class="event-date">${formatDate(event.date)}</span>
+        `;
+        
+        eventList.appendChild(eventItem);
+    });
+}
+
+function updateEventCodesList() {
+    const codes = getEventCodes().filter(code => code.createdBy === currentUser.username);
+    eventCodesList.innerHTML = '';
+    
+    if (codes.length === 0) {
+        eventCodesList.innerHTML = '<p class="no-data-message">No event codes generated yet.</p>';
+        return;
+    }
+    
+    // Sort codes by date, newest first
+    codes.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    
+    codes.forEach(codeItem => {
+        const codeElement = document.createElement('div');
+        codeElement.className = 'event-code-item';
+        codeElement.innerHTML = `
+            <span class="event-code-value">${codeItem.code}</span>
+            <div>
+                <span>${codeItem.used ? 'Used' : 'Active'}</span>
+                <button class="event-code-copy" data-code="${codeItem.code}">Copy</button>
+            </div>
+        `;
+        eventCodesList.appendChild(codeElement);
+    });
+    
+    // Add copy functionality
+    document.querySelectorAll('.event-code-copy').forEach(button => {
+        button.addEventListener('click', () => {
+            const code = button.getAttribute('data-code');
+            navigator.clipboard.writeText(code).then(() => {
+                button.textContent = 'Copied!';
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                }, 2000);
+            });
+        });
+    });
+}
+
+// Event Modal Functions
+function openEventModal(type) {
+    currentEventAction = type;
+    
+    // Set modal title based on action type
+    if (type === 'participated') {
+        modalTitle.textContent = 'Participate in Event';
+    } else if (type === 'organized') {
+        modalTitle.textContent = 'Organize Event';
+    } else if (type === 'volunteered') {
+        modalTitle.textContent = 'Volunteer for Event';
+    }
+    
+    // Clear previous inputs and errors
+    eventCodeInput.value = '';
+    modalError.textContent = '';
+    
+    // Show modal
+    eventModal.classList.remove('hidden');
+}
+
+function closeEventModal() {
+    eventModal.classList.add('hidden');
+    currentEventAction = null;
+}
+
+function handleEventSubmit() {
+    const eventCode = eventCodeInput.value.trim();
+    
+    if (!eventCode) {
+        modalError.textContent = 'Please enter an event code.';
+        return;
+    }
+    
+    if (!validateEventCode(eventCode)) {
+        modalError.textContent = 'Invalid event code format. Must be EV-XX0000 format.';
+        return;
+    }
+    
+    if (!eventCodeExists(eventCode)) {
+        modalError.textContent = 'Event code does not exist.';
+        return;
+    }
+    
+    // Record the event
+    const eventData = {
+        username: currentUser.username,
+        code: eventCode,
+        type: currentEventAction,
+        date: new Date().toISOString()
+    };
+    
+    saveEvent(eventData);
+    markEventCodeAsUsed(eventCode);
+    
+    // Update user stats
+    if (currentEventAction === 'participated') {
+        currentUser.eventsParticipated = (currentUser.eventsParticipated || 0) + 1;
+    } else if (currentEventAction === 'organized') {
+        currentUser.eventsOrganized = (currentUser.eventsOrganized || 0) + 1;
+    } else if (currentEventAction === 'volunteered') {
+        currentUser.eventsVolunteered = (currentUser.eventsVolunteered || 0) + 1;
+    }
+    
+    saveUser(currentUser);
+    setCurrentUser(currentUser);
+    
+    closeEventModal();
+    updateDashboard();
+}
+
+// Utility Functions
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+// Initialize the application
+function initApp() {
+    // Check if user is already logged in
+    currentUser = getCurrentUser();
+    if (currentUser) {
+        showDashboard();
+    }
+    
+    // Initialize Lucide icons
+    lucide.createIcons();
+    
+    // Event Listeners
+    authForm.addEventListener('submit', handleAuthFormSubmit);
+    toggleAuth.addEventListener('click', toggleAuthForm);
+    
+    logoutBtn.addEventListener('click', () => {
+        clearCurrentUser();
+        authContainer.classList.remove('hidden');
+        dashboard.classList.add('hidden');
+        authForm.reset();
+    });
+    
+    // Event buttons
+    participateBtn.addEventListener('click', () => openEventModal('participated'));
+    organizeBtn.addEventListener('click', () => openEventModal('organized'));
+    volunteerBtn.addEventListener('click', () => openEventModal('volunteered'));
+    
+    // Event modal buttons
+    closeModalBtn.addEventListener('click', closeEventModal);
+    cancelModalBtn.addEventListener('click', closeEventModal);
+    confirmEventBtn.addEventListener('click', handleEventSubmit);
+    
+    // Event code generator button
+    generateEventCodeBtn.addEventListener('click', () => {
+        const newCode = generateEventCode();
+        addEventCode(newCode);
+        updateEventCodesList();
+    });
+}
+
+// Start the application when DOM is loaded
+document.addEventListener('DOMContentLoaded', initApp);
