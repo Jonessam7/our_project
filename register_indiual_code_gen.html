@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Registration System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        
+        h1, h2 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 20px auto;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .result {
+            display: none;
+            background-color: #f1f9f6;
+            border-left: 4px solid #2ecc71;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
+        
+        .team-member {
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        
+        .code-display {
+            font-family: monospace;
+            font-size: 18px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        
+        .hide {
+            display: none;
+        }
+        
+        .show {
+            display: block;
+        }
+        
+        .error {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            border-radius: 4px 4px 0 0;
+        }
+        
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            margin: 0;
+        }
+        
+        .tab button:hover {
+            background-color: #ddd;
+        }
+        
+        .tab button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .tabcontent {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Event Registration System</h1>
+    
+    <div class="tab">
+        <button class="tablinks active" onclick="openTab(event, 'TeamRegistration')">Team Registration</button>
+        <button class="tablinks" onclick="openTab(event, 'ParticipantRegistration')">Individual Registration</button>
+    </div>
+    
+    <div id="TeamRegistration" class="tabcontent" style="display: block;">
+        <div class="container">
+            <h2>Register Your Team</h2>
+            
+            <form id="teamForm">
+                <div class="form-group">
+                    <label for="eventName">Event Name:</label>
+                    <select id="eventName" required>
+                        <option value="">Select an event</option>
+                        <option value="Hackathon">Hackathon</option>
+                        <option value="Debate">Debate Competition</option>
+                        <option value="Quiz">Quiz Bowl</option>
+                        <option value="Sports">Sports Tournament</option>
+                        <option value="Music">Music Festival</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="teamName">Team Name:</label>
+                    <input type="text" id="teamName" placeholder="Enter your team name" required>
+                    <div id="teamNameError" class="error"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="teamLeaderName">Team Leader Name:</label>
+                    <input type="text" id="teamLeaderName" placeholder="Enter team leader's full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="teamLeaderEmail">Team Leader Email:</label>
+                    <input type="email" id="teamLeaderEmail" placeholder="Enter team leader's email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="teamSize">Team Size:</label>
+                    <select id="teamSize" onchange="generateMemberFields()" required>
+                        <option value="">Select size</option>
+                        <option value="2">2 members</option>
+                        <option value="3">3 members</option>
+                        <option value="4">4 members</option>
+                        <option value="5">5 members</option>
+                    </select>
+                </div>
+                
+                <div id="teamMembers"></div>
+                
+                <button type="button" onclick="registerTeam()">Register Team</button>
+            </form>
+            
+            <div id="teamResult" class="result">
+                <h3>Registration Successful!</h3>
+                <p>Your team has been registered for the event.</p>
+                <p>Team Code: <span id="teamCode" class="code-display"></span></p>
+                <h4>Member Codes:</h4>
+                <div id="memberCodes"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="ParticipantRegistration" class="tabcontent">
+        <div class="container">
+            <h2>Individual Registration</h2>
+            
+            <form id="participantForm">
+                <div class="form-group">
+                    <label for="indEventName">Event Name:</label>
+                    <select id="indEventName" required>
+                        <option value="">Select an event</option>
+                        <option value="Hackathon">Hackathon</option>
+                        <option value="Debate">Debate Competition</option>
+                        <option value="Quiz">Quiz Bowl</option>
+                        <option value="Sports">Sports Tournament</option>
+                        <option value="Music">Music Festival</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="participantName">Full Name:</label>
+                    <input type="text" id="participantName" placeholder="Enter your full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="participantEmail">Email:</label>
+                    <input type="email" id="participantEmail" placeholder="Enter your email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="participantPhone">Phone Number:</label>
+                    <input type="tel" id="participantPhone" placeholder="Enter your phone number">
+                </div>
+                
+                <button type="button" onclick="registerParticipant()">Register</button>
+            </form>
+            
+            <div id="participantResult" class="result">
+                <h3>Registration Successful!</h3>
+                <p>You have been registered for the event.</p>
+                <p>Participant Code: <span id="participantCode" class="code-display"></span></p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Function to open tab content
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+        
+        // Function to generate random numbers (4 digits to ensure code length of 7-8)
+        function generateRandomNumbers() {
+            return Math.floor(Math.random() * 9000 + 1000); // Generates a 4-digit number (1000-9999)
+        }
+        
+        // Function to generate team code (7-8 characters)
+        function generateTeamCode(eventName, teamName) {
+            const eventFirstLetter = eventName.charAt(0).toUpperCase();
+            const teamFirstTwoLetters = teamName.substring(0, 2).toUpperCase();
+            const randomNumbers = generateRandomNumbers();
+            
+            // Take longer version of name if available to reach minimum 7 chars
+            let code = eventFirstLetter + teamFirstTwoLetters + randomNumbers;
+            
+            // If team name has more characters and we need more length, add them
+            if (code.length < 7 && teamName.length > 2) {
+                const extraLetters = teamName.substring(2, 7 - code.length + 2).toUpperCase();
+                code = eventFirstLetter + teamFirstTwoLetters + extraLetters + randomNumbers;
+            }
+            
+            return code;
+        }
+        
+        // Function to generate participant code (7-8 characters)
+        function generateParticipantCode(eventName, participantName) {
+            const eventFirstLetter = eventName.charAt(0).toUpperCase();
+            const nameFirstTwoLetters = participantName.substring(0, 2).toUpperCase();
+            const randomNumbers = generateRandomNumbers();
+            
+            // Take longer version of name if available to reach minimum 7 chars
+            let code = eventFirstLetter + nameFirstTwoLetters + randomNumbers;
+            
+            // If participant name has more characters and we need more length, add them
+            if (code.length < 7 && participantName.length > 2) {
+                const extraLetters = participantName.substring(2, 7 - code.length + 2).toUpperCase();
+                code = eventFirstLetter + nameFirstTwoLetters + extraLetters + randomNumbers;
+            }
+            
+            return code;
+        }
+        
+        // Function to generate member input fields based on team size
+        function generateMemberFields() {
+            const teamSize = document.getElementById("teamSize").value;
+            const teamMembers = document.getElementById("teamMembers");
+            teamMembers.innerHTML = "";
+            
+            // Start from 2 because team leader is already included
+            for (let i = 2; i <= teamSize; i++) {
+                const memberDiv = document.createElement("div");
+                memberDiv.className = "team-member";
+                memberDiv.innerHTML = `
+                    <h4>Team Member ${i}</h4>
+                    <div class="form-group">
+                        <label for="memberName${i}">Full Name:</label>
+                        <input type="text" id="memberName${i}" placeholder="Enter member's full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="memberEmail${i}">Email:</label>
+                        <input type="email" id="memberEmail${i}" placeholder="Enter member's email" required>
+                    </div>
+                `;
+                teamMembers.appendChild(memberDiv);
+            }
+        }
+        
+        // Function to register a team
+        function registerTeam() {
+            // Basic validation
+            const eventName = document.getElementById("eventName").value;
+            const teamName = document.getElementById("teamName").value;
+            const teamLeaderName = document.getElementById("teamLeaderName").value;
+            const teamLeaderEmail = document.getElementById("teamLeaderEmail").value;
+            const teamSize = document.getElementById("teamSize").value;
+            
+            // Validate required fields
+            if (!eventName || !teamName || !teamLeaderName || !teamLeaderEmail || !teamSize) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+            
+            // Validate team name (at least 2 characters)
+            if (teamName.length < 2) {
+                document.getElementById("teamNameError").textContent = "Team name must be at least 2 characters long.";
+                return;
+            } else {
+                document.getElementById("teamNameError").textContent = "";
+            }
+            
+            // Generate team code
+            const teamCode = generateTeamCode(eventName, teamName);
+            document.getElementById("teamCode").textContent = teamCode;
+            
+            // Generate member codes
+            const memberCodesDiv = document.getElementById("memberCodes");
+            memberCodesDiv.innerHTML = "";
+            
+            // Team leader code
+            const leaderCode = generateParticipantCode(eventName, teamLeaderName);
+            const leaderP = document.createElement("p");
+            leaderP.innerHTML = `<strong>${teamLeaderName}</strong> (Team Leader): <span class="code-display">${leaderCode}</span>`;
+            memberCodesDiv.appendChild(leaderP);
+            
+            // Other members codes
+            for (let i = 2; i <= teamSize; i++) {
+                const memberName = document.getElementById(`memberName${i}`).value;
+                if (memberName) {
+                    const memberCode = generateParticipantCode(eventName, memberName);
+                    const memberP = document.createElement("p");
+                    memberP.innerHTML = `<strong>${memberName}</strong>: <span class="code-display">${memberCode}</span>`;
+                    memberCodesDiv.appendChild(memberP);
+                }
+            }
+            
+            // Display result
+            document.getElementById("teamResult").style.display = "block";
+            
+            // Scroll to the result
+            document.getElementById("teamResult").scrollIntoView({ behavior: "smooth" });
+        }
+        
+        // Function to register an individual participant
+        function registerParticipant() {
+            // Basic validation
+            const eventName = document.getElementById("indEventName").value;
+            const participantName = document.getElementById("participantName").value;
+            const participantEmail = document.getElementById("participantEmail").value;
+            
+            // Validate required fields
+            if (!eventName || !participantName || !participantEmail) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+            
+            // Generate participant code
+            const participantCode = generateParticipantCode(eventName, participantName);
+            document.getElementById("participantCode").textContent = participantCode;
+            
+            // Display result
+            document.getElementById("participantResult").style.display = "block";
+            
+            // Scroll to the result
+            document.getElementById("participantResult").scrollIntoView({ behavior: "smooth" });
+        }
+    </script>
+</body>
+</html>
