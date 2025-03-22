@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Dashboard</title>
+    <link rel="stylesheet" href="/userLogin/userLogCSS.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div id="auth-container" class="container">
+        <div class="auth-form">
+            <h2 id="form-title">Welcome Back</h2>
+            
+            <form id="auth-form" onsubmit="handleSubmit(event)">
+                <div class="input-group">
+                    <i data-lucide="user" class="input-icon"></i>
+                    <input type="text" id="username" placeholder="Username" required>
+                </div>
+
+                <div id="fullname-group" class="input-group hidden">
+                    <i data-lucide="user" class="input-icon"></i>
+                    <input type="text" id="fullname" placeholder="Full Name">
+                </div>
+
+                <div id="email-group" class="input-group hidden">
+                    <i data-lucide="mail" class="input-icon"></i>
+                    <input type="email" id="email" placeholder="Email">
+                </div>
+
+                <div class="input-group">
+                    <i data-lucide="key-round" class="input-icon"></i>
+                    <input type="password" id="password" placeholder="Password" required>
+                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password')">
+                        <i data-lucide="eye" class="password-toggle-icon"></i>
+                    </button>
+                </div>
+
+                <div id="confirm-password-group" class="input-group hidden">
+                    <i data-lucide="key-round" class="input-icon"></i>
+                    <input type="password" id="confirm-password" placeholder="Confirm Password">
+                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility('confirm-password')">
+                        <i data-lucide="eye" class="password-toggle-icon"></i>
+                    </button>
+                </div>
+
+                <p id="error-message" class="error-text"></p>
+                <p id="success-message" class="success-text"></p>
+                
+
+                <button type="submit" class="submit-btn">Login</button>
+            </form>
+
+            <p id="forgot-password" class="text-center">
+                <a href="#" class="link">Forgot Password?</a>
+            </p>
+
+            <p class="text-center">
+                <span id="toggle-text">Don't have an account? </span>
+                <a href="#" id="toggle-auth" class="link">Register</a>
+            </p>
+        </div>
+    </div>
+
+
+    <p id="error-message" class="error-text"></p>
+
+
+    <div id="dashboard" class="dashboard hidden">
+        <div class="dashboard-header">
+            <div class="header-content">
+                <div>
+                    <h1 id="welcome-message">Welcome</h1>
+                    <p id="unique-code"></p>
+                </div>
+                <div class="user-email" id="user-email"></div>
+            </div>
+        </div>
+
+        <div class="dashboard-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <i data-lucide="trophy" class="stat-icon yellow"></i>
+                        <h2>Ranking</h2>
+                    </div>
+                    <p id="ranking" class="stat-value">#0</p>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <i data-lucide="calendar" class="stat-icon blue"></i>
+                        <h2>Events Participated</h2>
+                    </div>
+                    <p id="events-participated" class="stat-value">0</p>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <i data-lucide="crown" class="stat-icon purple"></i>
+                        <h2>Events Organized</h2>
+                    </div>
+                    <p id="events-organized" class="stat-value">0</p>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <i data-lucide="heart-handshake" class="stat-icon green"></i>
+                        <h2>Events Volunteered</h2>
+                    </div>
+                    <p id="events-volunteered" class="stat-value">0</p>
+                </div>
+            </div>
+
+            <div class="ranking-list">
+                <h2>Ranking List</h2>
+                <div class="ranking-item">
+                    <div class="ranking-info">
+                        <span class="rank">#1</span>
+                        <span class="name">John Doe</span>
+                    </div>
+                    <span class="points">1250 points</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/userLogin/userLog.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+    <!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+</body>
+</html>
