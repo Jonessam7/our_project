@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Dashboard</title>
+    <!-- <script src="https://unpkg.com/lucide@latest"></script> -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<style>
+    /* All the CSS remains unchanged */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    
+    body {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    }
+    
+    .container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+    }
+    
+    .auth-form {
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+    }
+    
+    .auth-form h2 {
+        font-size: 1.875rem;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 2rem;
+        color: #1f2937;
+    }
+    
+    .input-group {
+        position: relative;
+        margin-bottom: 1rem;
+    }
+    
+    .input-icon {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+    
+    .input-group input {
+        width: 100%;
+        padding: 0.5rem 1rem 0.5rem 2.5rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        transition: all 0.2s;
+    }
+    
+    .input-group input:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    /* Password toggle button styles */
+    .toggle-password {
+        position: absolute;
+        right: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .password-toggle-icon {
+        width: 1.25rem;
+        height: 1.25rem;
+        color: #9ca3af;
+        transition: color 0.2s;
+    }
+    
+    .toggle-password:hover .password-toggle-icon {
+        color: #6b7280;
+    }
+    
+    /* Adjust input padding for password fields to accommodate the toggle button */
+    .input-group input[type="password"] {
+        padding-right: 2.5rem;
+    }
+    
+    .submit-btn {
+        width: 100%;
+        padding: 0.5rem;
+        background: #3b82f6;
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    
+    .submit-btn:hover {
+        background: #2563eb;
+    }
+    
+    .text-center {
+        text-align: center;
+        margin-top: 1rem;
+    }
+    
+    .link {
+        color: #3b82f6;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    
+    .link:hover {
+        text-decoration: underline;
+    }
+    
+    .error-message {
+        color: #ef4444;
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+        min-height: 1.25rem;
+    }
+    
+    .hidden {
+        display: none !important;
+    }
+    
+    /* Dashboard Styles */
+    .dashboard {
+        min-height: 100vh;
+        background: #f3f4f6;
+    }
+    
+    .dashboard-header {
+        background: white;
+        padding: 1.5rem 1rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .header-content {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .header-content h1 {
+        font-size: 1.875rem;
+        font-weight: bold;
+        color: #1f2937;
+    }
+    
+    .user-email {
+        color: #6b7280;
+    }
+    
+    .dashboard-content {
+        max-width: 1280px;
+        margin: 1.5rem auto;
+        padding: 0 1rem;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    @media (min-width: 768px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    @media (min-width: 1024px) {
+        .stats-grid {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+    
+    .stat-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stat-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    
+    .stat-icon {
+        width: 2rem;
+        height: 2rem;
+        margin-right: 0.75rem;
+    }
+    
+    .yellow { color: #f59e0b; }
+    .blue { color: #3b82f6; }
+    .purple { color: #8b5cf6; }
+    .green { color: #10b981; }
+    
+    .stat-value {
+        font-size: 1.875rem;
+        font-weight: bold;
+        color: #1f2937;
+    }
+    
+    .ranking-list {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .ranking-list h2 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #1f2937;
+        margin-bottom: 1rem;
+    }
+    
+    .ranking-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        background: #f9fafb;
+        border-radius: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .ranking-info {
+        display: flex;
+        align-items: center;
+    }
+    
+    .rank {
+        font-weight: 600;
+        margin-right: 1rem;
+    }
+    
+    .points {
+        color: #3b82f6;
+        font-weight: 500;
+    }
+
+    .logout-btn {
+        background: #ef4444;
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    
+    .logout-btn:hover {
+        background: #dc2626;
+    }
+
+    .rankings-container {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .no-data-message {
+        text-align: center;
+        color: #6b7280;
+        padding: 2rem 0;
+    }
+
+    .user-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    /* Add event controls */
+    .event-controls {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+    }
+
+    .event-controls h2 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #1f2937;
+        margin-bottom: 1rem;
+    }
+
+    .event-buttons {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .event-btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .participate-btn {
+        background: #3b82f6;
+        color: white;
+    }
+
+    .participate-btn:hover {
+        background: #2563eb;
+    }
+
+    .organize-btn {
+        background: #8b5cf6;
+        color: white;
+    }
+
+    .organize-btn:hover {
+        background: #7c3aed;
+    }
+
+    .volunteer-btn {
+        background: #10b981;
+        color: white;
+    }
+
+    .volunteer-btn:hover {
+        background: #059669;
+    }
+</style>
+<body>
+    <div id="auth-container" class="container">
+        <div class="auth-form">
+            <h2 id="form-title">Welcome Back</h2>
+            
+            <form id="auth-form" onsubmit="handleSubmit(event)">
+                <div class="input-group">
+                    <i data-lucide="user" class="input-icon"></i>
+                    <input type="text" id="username" placeholder="Username" required>
+                </div>
+
+                <div id="fullname-group" class="input-group hidden">
+                    <i data-lucide="user" class="input-icon"></i>
+                    <input type="text" id="fullname" placeholder="Full Name">
+                </div>
+
+                <div id="email-group" class="input-group hidden">
+                    <i data-lucide="mail" class="input-icon"></i>
+                    <input type="email" id="email" placeholder="Email">
+                </div>
+
+                <div class="input-group">
+                    <i data-lucide="key-round" class="input-icon"></i>
+                    <input type="password" id="password" placeholder="Password" required>
+                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password')">
+                        <i data-lucide="eye" class="password-toggle-icon"></i>
+                    </button>
+                </div>
+
+                <div id="confirm-password-group" class="input-group hidden">
+                    <i data-lucide="key-round" class="input-icon"></i>
+                    <input type="password" id="confirm-password" placeholder="Confirm Password">
+                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility('confirm-password')">
+                        <i data-lucide="eye" class="password-toggle-icon"></i>
+                    </button>
+                </div>
+
+                <p id="error-message" class="error-message"></p>
+
+                <button id="submit-button" type="submit" class="submit-btn">Login</button>
+            </form>
+
+            <p id="forgot-password" class="text-center">
+                <a href="#" class="link">Forgot Password?</a>
+            </p>
+
+            <p class="text-center">
+                <span id="toggle-text">Don't have an account? </span>
+                <a href="#" id="toggle-auth" class="link">Register</a>
+            </p>
+        </div>
+    </div>
+
+    <div id="dashboard" class="dashboard hidden">
+        <div class="dashboard-header">
+            <div class="header-content">
+                <div>
+                    <h1 id="welcome-message">Welcome</h1>
+                    <p id="unique-code"></p>
+                </div>
+                <div class="user-actions">
+                    <span class="user-email" id="user-email"></span>
+                    <button id="logout-btn" class="logout-btn" onclick="handleLogout()">Logout</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <i data-lucide="trophy" class="stat-icon yellow"></i>
+                        <h2>Ranking</h2>
+                    </div>
+                    <p id="ranking" class="stat-value">#0</p>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <i data-lucide="calendar" class="stat-icon blue"></i>
+                        <h2>Events Participated</h2>
+                    </div>
+                    <p id="events-participated" class="stat-value">0</p>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <i data-lucide="crown" class="stat-icon purple"></i>
+                        <h2>Events Organized</h2>
+                    </div>
+                    <p id="events-organized" class="stat-value">0</p>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <i data-lucide="heart-handshake" class="stat-icon green"></i>
+                        <h2>Events Volunteered</h2>
+                    </div>
+                    <p id="events-volunteered" class="stat-value">0</p>
+                </div>
+            </div>
+
+            <div class="event-controls">
+                <h2>Event Actions</h2>
+                <div class="event-buttons">
+                    <button class="event-btn participate-btn" onclick="addEventParticipation()">
+                        <i data-lucide="plus-circle" class="event-icon"></i>
+                        Participate in Event
+                    </button>
+                    <button class="event-btn organize-btn" onclick="addEventOrganized()">
+                        <i data-lucide="plus-circle" class="event-icon"></i>
+                        Organize Event
+                    </button>
+                    <button class="event-btn volunteer-btn" onclick="addEventVolunteered()">
+                        <i data-lucide="plus-circle" class="event-icon"></i>
+                        Volunteer for Event
+                    </button>
+                </div>
+            </div>
+
+            <div class="ranking-list">
+                <h2>Ranking List</h2>
+                <div id="rankings-container" class="rankings-container">
+                    <!-- Rankings will be dynamically filled here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // State management
+        let isLogin = true;
+        let currentUser = null;
+        
+        // LocalStorage keys
+        const USERS_STORAGE_KEY = 'dashboard_users';
+        const CURRENT_USER_KEY = 'dashboard_current_user';
+
+        // DOM Elements
+        const authContainer = document.getElementById('auth-container');
+        const dashboard = document.getElementById('dashboard');
+        const authForm = document.getElementById('auth-form');
+        const formTitle = document.getElementById('form-title');
+        const toggleAuth = document.getElementById('toggle-auth');
+        const toggleText = document.getElementById('toggle-text');
+        const forgotPassword = document.getElementById('forgot-password');
+        const errorMessage = document.getElementById('error-message');
+        const submitButton = document.getElementById('submit-button');
+
+        // Additional form fields
+        const fullnameGroup = document.getElementById('fullname-group');
+        const emailGroup = document.getElementById('email-group');
+        const confirmPasswordGroup = document.getElementById('confirm-password-group');
+
+        // Form inputs
+        const usernameInput = document.getElementById('username');
+        const fullnameInput = document.getElementById('fullname');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirm-password');
+
+        // Dashboard elements
+        const welcomeMessage = document.getElementById('welcome-message');
+        const uniqueCode = document.getElementById('unique-code');
+        const userEmail = document.getElementById('user-email');
+        const rankingElement = document.getElementById('ranking');
+        const eventsParticipated = document.getElementById('events-participated');
+        const eventsOrganized = document.getElementById('events-organized');
+        const eventsVolunteered = document.getElementById('events-volunteered');
+        const rankingsContainer = document.getElementById('rankings-container');
+
+        // Local Storage Functions
+        function getUsers() {
+            const users = localStorage.getItem(USERS_STORAGE_KEY);
+            return users ? JSON.parse(users) : [];
+        }
+
+        function saveUsers(users) {
+            localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+        }
+
+        function findUserByUsername(username) {
+            const users = getUsers();
+            return users.find(user => user.username === username);
+        }
+
+        function saveUser(user) {
+            const users = getUsers();
+            const existingUserIndex = users.findIndex(u => u.username === user.username);
+            
+            if (existingUserIndex >= 0) {
+                users[existingUserIndex] = user;
+            } else {
+                users.push(user);
+            }
+            
+            saveUsers(users);
+        }
+
+        function setCurrentUser(user) {
+            localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+            currentUser = user;
+        }
+
+        function getCurrentUser() {
+            const user = localStorage.getItem(CURRENT_USER_KEY);
+            return user ? JSON.parse(user) : null;
+        }
+
+        function clearCurrentUser() {
+            localStorage.removeItem(CURRENT_USER_KEY);
+            currentUser = null;
+        }
+
+        // Utility Functions
+        function validatePassword(password) {
+            // Simplified password validation for testing
+            return password.length >= 8;
+        }
+
+        function generateUniqueCode(fullName) {
+            const nameLetters = fullName.substring(0, 2).toUpperCase();
+            const randomLetters = Array.from({ length: 2 }, () => 
+                String.fromCharCode(65 + Math.floor(Math.random() * 26))
+            ).join('');
+            const randomNumbers = Array.from({ length: 4 }, () => 
+                Math.floor(Math.random() * 10)
+            ).join('');
+
+            return `${nameLetters}${randomLetters}${randomNumbers}`;
+        }
+
+        function calculateRanking() {
+            const users = getUsers();
+            
+            // Sort users by total points
+            users.sort((a, b) => {
+                const pointsA = a.eventsParticipated * 100 + a.eventsOrganized * 200 + a.eventsVolunteered * 150;
+                const pointsB = b.eventsParticipated * 100 + b.eventsOrganized * 200 + b.eventsVolunteered * 150;
+                return pointsB - pointsA;
+            });
+            
+            // Update rankings
+            users.forEach((user, index) => {
+                user.ranking = index + 1;
+            });
+            
+            saveUsers(users);
+            
+            return users;
+        }
+
+        function calculatePoints(user) {
+            return user.eventsParticipated * 100 + 
+                   user.eventsOrganized * 200 + 
+                   user.eventsVolunteered * 150;
+        }
+
+        // Password visibility toggle
+        function togglePasswordVisibility(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.nextElementSibling.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                input.type = 'password';
+                icon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons(); // Refresh icons
+        }
+
+        // UI Functions
+        function toggleAuthMode() {
+            isLogin = !isLogin;
+            formTitle.textContent = isLogin ? 'Welcome Back' : 'Create Account';
+            submitButton.textContent = isLogin ? 'Login' : 'Register';
+            toggleAuth.textContent = isLogin ? 'Register' : 'Login';
+            toggleText.textContent = isLogin ? "Don't have an account? " : "Already have an account? ";
+            forgotPassword.style.display = isLogin ? 'block' : 'none';
+            
+            // Toggle additional fields
+            fullnameGroup.classList.toggle('hidden', isLogin);
+            emailGroup.classList.toggle('hidden', isLogin);
+            confirmPasswordGroup.classList.toggle('hidden', isLogin);
+            
+            // Reset form
+            authForm.reset();
+            errorMessage.textContent = '';
+        }
+
+        function updateRankingsList() {
+            const rankedUsers = calculateRanking();
+            rankingsContainer.innerHTML = '';
+            
+            if (rankedUsers.length === 0) {
+                rankingsContainer.innerHTML = '<p class="no-data-message">No users registered yet.</p>';
+                return;
+            }
+            
+            rankedUsers.forEach((user, index) => {
+                const rankingItem = document.createElement('div');
+                rankingItem.className = 'ranking-item';
+                rankingItem.innerHTML = `
+                    <div class="ranking-info">
+                        <span class="rank">#${index + 1}</span>
+                        <span class="name">${user.fullName}</span>
+                    </div>
+                    <span class="points">${calculatePoints(user)} points</span>
+                `;
+                
+                if (currentUser && user.username === currentUser.username) {
+                    rankingItem.style.backgroundColor = '#e0f2fe';
+                    rankingItem.style.borderLeft = '4px solid #3b82f6';
+                }
+                
+                rankingsContainer.appendChild(rankingItem);
+            });
+        }
+
+        function showDashboard(user) {
+            authContainer.classList.add('hidden');
+            dashboard.classList.remove('hidden');
+            
+            // Update dashboard content
+            welcomeMessage.textContent = `Welcome, ${user.fullName}`;
+            uniqueCode.textContent = `Unique Code: ${user.uniqueCode}`;
+            userEmail.textContent = user.email;
+            rankingElement.textContent = `#${user.ranking}`;
+            eventsParticipated.textContent = user.eventsParticipated;
+            eventsOrganized.textContent = user.eventsOrganized;
+            eventsVolunteered.textContent = user.eventsVolunteered;
+            
+            // Update rankings list
+            updateRankingsList();
+        }
+
+        // Event Action functions
+        function addEventParticipation() {
+            if (!currentUser) return;
+            
+            currentUser.eventsParticipated += 1;
+            eventsParticipated.textContent = currentUser.eventsParticipated;
+            
+            saveUser(currentUser);
+            setCurrentUser(currentUser);
+            updateRankingsList();
+        }
+
+        function addEventOrganized() {
+            if (!currentUser) return;
+            
+            currentUser.eventsOrganized += 1;
+            eventsOrganized.textContent = currentUser.eventsOrganized;
+            
+            saveUser(currentUser);
+            setCurrentUser(currentUser);
+            updateRankingsList();
+        }
+
+        function addEventVolunteered() {
+            if (!currentUser) return;
+            
+            currentUser.eventsVolunteered += 1;
+            eventsVolunteered.textContent = currentUser.eventsVolunteered;
+            
+            saveUser(currentUser);
+            setCurrentUser(currentUser);
+            updateRankingsList();
+        }
+
+        // Event Handlers
+        function handleSubmit(event) {
+            event.preventDefault();
+            errorMessage.textContent = '';
+
+            const username = usernameInput.value;
+            const password = passwordInput.value;
+
+            if (isLogin) {
+                // Login logic
+                const user = findUserByUsername(username);
+                
+                if (!user) {
+                    errorMessage.textContent = 'User not found';
+                    return;
+                }
+                
+                if (user.password !== password) {
+                    errorMessage.textContent = 'Incorrect password';
+                    return;
+                }
+                
+                setCurrentUser(user);
+                showDashboard(user);
+            } else {
+                // Registration logic
+                if (findUserByUsername(username)) {
+                    errorMessage.textContent = 'Username already exists';
+                    return;
+                }
+
+                const fullName = fullnameInput.value;
+                const email = emailInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+                
+                if (!fullName || !email) {
+                    errorMessage.textContent = 'Please fill in all fields';
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    errorMessage.textContent = 'Passwords do not match';
+                    return;
+                }
+                
+                if (!validatePassword(password)) {
+                    errorMessage.textContent = 'Password must be at least 8 characters';
+                    return;
+                }
+                
+                const newUser = {
+                    username: username,
+                    password: password,
+                    fullName: fullName,
+                    email: email,
+                    uniqueCode: generateUniqueCode(fullName),
+                    eventsParticipated: 0,
+                    eventsOrganized: 0,
+                    eventsVolunteered: 0,
+                    ranking: getUsers().length + 1
+                };
+                
+                saveUser(newUser);
+                setCurrentUser(newUser);
+                showDashboard(newUser);
+            }
+        }
+
+        function handleLogout() {
+            clearCurrentUser();
+            dashboard.classList.add('hidden');
+            authContainer.classList.remove('hidden');
+            authForm.reset();
+        }
+
+        // Initialize the application
+        function initApp() {
+            // Add event listeners
+            toggleAuth.addEventListener('click', (e) => {
+                e.preventDefault();
+                toggleAuthMode();
+            });
+            
+            // Check if user is logged in
+            const savedUser = getCurrentUser();
+            if (savedUser) {
+                currentUser = savedUser;
+                showDashboard(savedUser);
+            }
+            
+            console.log('App initialized');
+        }
+
+        // Start the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initApp();
+            lucide.createIcons();
+            console.log('DOM fully loaded');
+        });
+    </script>
+</body>
+</html>
